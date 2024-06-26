@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 @Getter @Setter
 public class Reply {
 
-    @Id @GeneratedValue
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "reply_id")
     private Long id;
 
