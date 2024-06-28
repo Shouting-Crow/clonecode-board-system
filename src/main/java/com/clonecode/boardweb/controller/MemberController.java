@@ -1,7 +1,7 @@
 package com.clonecode.boardweb.controller;
 
-import com.clonecode.boardweb.dto.login.MemberRegisterDto;
-import com.clonecode.boardweb.service.MemberRegisterService;
+import com.clonecode.boardweb.dto.register.MemberRegisterDto;
+import com.clonecode.boardweb.service.register.MemberRegisterService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

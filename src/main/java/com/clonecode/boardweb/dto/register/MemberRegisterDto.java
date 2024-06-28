@@ -1,4 +1,4 @@
-package com.clonecode.boardweb.dto.login;
+package com.clonecode.boardweb.dto.register;
 
 import jakarta.validation.constraints.NotEmpty;
 import lombok.Getter;

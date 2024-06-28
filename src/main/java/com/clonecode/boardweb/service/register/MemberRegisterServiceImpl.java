@@ -1,8 +1,8 @@
-package com.clonecode.boardweb.service;
+package com.clonecode.boardweb.service.register;
 
 import com.clonecode.boardweb.domain.Address;
 import com.clonecode.boardweb.domain.Member;
-import com.clonecode.boardweb.dto.login.MemberRegisterDto;
+import com.clonecode.boardweb.dto.register.MemberRegisterDto;
 import com.clonecode.boardweb.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
