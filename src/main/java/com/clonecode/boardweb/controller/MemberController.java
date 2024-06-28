@@ -32,6 +32,11 @@ public class MemberController {
             return "register/member";
         }
 
+        if (memberRegisterService.validateDuplicateMember(registerDto.getLoginId())){
+            bindingResult.rejectValue("loginId", "duplicate", "이미 존재하는 계정입니다.");
+            return "register/member";
+        }
+
         memberRegisterService.registerMember(registerDto);
         return "redirect:/";
     }

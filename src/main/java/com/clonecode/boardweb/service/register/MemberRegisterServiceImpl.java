@@ -19,6 +19,9 @@ public class MemberRegisterServiceImpl implements MemberRegisterService{
     @Override
     @Transactional
     public Member registerMember(MemberRegisterDto dto) {
+        if (validateDuplicateMember(dto.getLoginId())){
+            throw new IllegalStateException("이미 존재하는 계정입니다.");
+        }
         validateDuplicateMember(dto.getLoginId());
         Member member = new Member();
         member.setName(dto.getName());
@@ -31,9 +34,8 @@ public class MemberRegisterServiceImpl implements MemberRegisterService{
         return memberRepository.save(member);
     }
 
-    private void validateDuplicateMember(String loginId){
-        if (memberRepository.findByLoginId(loginId).isPresent()){
-            throw new IllegalStateException("이미 존재하는 계정입니다.");
-        }
+    @Override
+    public boolean validateDuplicateMember(String loginId){
+        return memberRepository.findByLoginId(loginId).isPresent();
     }
 }

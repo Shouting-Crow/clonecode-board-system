@@ -5,4 +5,5 @@ import com.clonecode.boardweb.dto.register.MemberRegisterDto;
 
 public interface MemberRegisterService {
     Member registerMember(MemberRegisterDto dto);
+    boolean validateDuplicateMember(String loginId);
 }
