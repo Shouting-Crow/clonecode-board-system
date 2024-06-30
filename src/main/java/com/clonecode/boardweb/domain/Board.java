@@ -30,4 +30,14 @@ public class Board {
     private LocalDateTime createdDate;
 
     private Long viewCount;
+
+    public static Board create(Member member, String title, List<Reply> replies, Long viewCount) {
+        Board board = new Board();
+        board.member = member;
+        board.title = title;
+        board.reply = replies;
+        board.viewCount = viewCount;
+        board.createdDate = LocalDateTime.now();
+        return board;
+    }
 }
