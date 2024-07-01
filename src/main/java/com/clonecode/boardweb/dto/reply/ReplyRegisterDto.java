@@ -7,12 +7,12 @@ import lombok.Setter;
 import java.time.LocalDateTime;
 
 @Getter @Setter
-public class ReplyDto {
+public class ReplyRegisterDto {
 
-    private Long replyId;
     private Long boardId;
     private Member member;
     private String content;
     private LocalDateTime createdDate;
+
 
 }

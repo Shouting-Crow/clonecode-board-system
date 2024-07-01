@@ -17,10 +17,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -82,9 +79,12 @@ public class BoardController {
     }
 
     @GetMapping("/board/{id}")
-    public String viewBoardDetail(@PathVariable(name = "id") Long id, Model model){
+    public String viewBoardDetail(@PathVariable(name = "id") Long id,
+                                  @SessionAttribute(name = "member", required = false) Member member,
+                                  Model model){
         BoardDetailDto boardDetailDto = boardService.getBoardDetail(id);
         model.addAttribute("boardDetail", boardDetailDto);
+        model.addAttribute("member", member);
         return "board/board-detail";
     }
 }

@@ -62,7 +62,7 @@ public class BoardServiceImpl implements BoardService{
         List<ReplyDto> replyDtos = board.getReply().stream()
                 .map(reply -> {
                     ReplyDto replyDto = new ReplyDto();
-                    replyDto.setId(reply.getId());
+                    replyDto.setReplyId(reply.getId());
                     replyDto.setMember(reply.getBoard().getMember());
                     replyDto.setContent(reply.getContent());
                     replyDto.setCreatedDate(reply.getCreatedDate());

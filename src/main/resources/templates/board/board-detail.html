@@ -17,6 +17,14 @@
       font-size: 0.9em;
       color: #888;
     }
+    .board-content {
+      border: 1px solid #ccc;
+      padding: 10px;
+      min-height: 450px;
+      padding-bottom: 20px;
+      overflow-wrap: break-word;
+      margin-bottom: 2em;
+    }
     .button-group {
       display: flex;
       justify-content: space-between;
@@ -25,6 +33,33 @@
     .button-group a,
     .button-group button {
       margin-right: 1em;
+    }
+    .reply-list {
+      list-style-type: none;
+      padding-left: 0;
+      margin-top: 2em;
+    }
+    .reply-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid #ddd;
+      padding: 10px 0;
+    }
+    .reply-content {
+      flex: 1;
+      margin-left: 10px;
+    }
+    .reply-date {
+      white-space: nowrap;
+      color: #888;
+    }
+    .reply-delete {
+      color: #888;
+      cursor: pointer;
+    }
+    .reply-delete:hover {
+      color: #f00;
     }
   </style>
 </head>
@@ -36,25 +71,30 @@
     <div th:text="'작성일: ' + ${#temporals.format(boardDetail.createdDate, 'yyyy-MM-dd HH:mm')}"></div>
     <div th:text="'조회수: ' + ${boardDetail.viewCount}"></div>
   </div>
-  <div th:text="${boardDetail.content}"></div>
-
-  <h2 class="mt-5">댓글</h2>
-  <div th:each="reply : ${boardDetail.replies}">
-    <div class="border rounded p-3 mb-3">
-      <p th:text="${reply.content}"></p>
-      <p class="text-muted" th:text="'작성자: ' + ${reply.member.name}"></p>
-      <p class="text-muted" th:text="'작성일: ' + ${#temporals.format(reply.createdDate, 'yyyy-MM-dd HH:mm')}"></p>
-    </div>
+  <div class="board-content">
+    <div th:text="${boardDetail.content}"></div>
   </div>
 
-  <div class="mt-5">
-    <h3>댓글 쓰기</h3>
-    <form th:action="@{/board/{id}/reply(id=${boardDetail.id})}" method="post">
+<!--  <h2 class="mt-5">댓글</h2>-->
+  <ul class="reply-list">
+    <li class="reply-item" th:each="reply : ${boardDetail.replies}">
+      <span th:text="${reply.member.name}"></span>
+      <span class="reply-content" th:text="${reply.content}"></span>
+      <span class="reply-date" th:text="${#temporals.format(reply.createdDate, 'MM.dd HH:mm')}"></span>
+      <span class="reply-delete" th:if="${member != null and member.id == reply.member.id}" th:text="'삭제'"
+            onclick="deleteReply([[${reply.id}]])"></span>
+    </li>
+  </ul>
+
+  <div class="mt-4">
+    <h2>댓글 쓰기</h2>
+    <form action="/replies/register" method="post">
+      <input type="hidden" name="boardId" th:value="${boardDetail.id}" />
       <div class="mb-3">
-        <label for="replyContent" class="form-label">내용</label>
-        <textarea class="form-control" id="replyContent" name="content" rows="3"></textarea>
+        <label for="content" class="form-label">댓글 내용</label>
+        <textarea class="form-control" id="content" name="content" rows="3"></textarea>
       </div>
-      <button type="submit" class="btn btn-primary">댓글 작성</button>
+      <button type="submit" class="btn btn-primary">댓글 등록</button>
     </form>
   </div>
 
@@ -66,5 +106,25 @@
     </div>
   </div>
 </div>
+
+<script>
+  function deleteReply(replyId){
+    if (confirm('댓글을 삭제하시겠습니까>')){
+      fetch(`/replies/${replyId}`,{
+        method: 'DELETE',
+        headers: {
+          'X-CSRF-TOKEN': document.querySelector('meta[name="_csrf"]').getAttribute('content')
+        }
+      }).then(response => {
+        if (response.ok){
+          window.location.reload();
+        } else {
+          alert('댓글 삭제에 실패했습니다.');
+        }
+      });
+    }
+  }
+</script>
+
 </body>
 </html>
