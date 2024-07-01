@@ -31,7 +31,8 @@ public class Board {
     @CreatedDate
     private LocalDateTime createdDate;
 
-    private Long viewCount;
+    private Long viewCount = 0L;
+    private Long replyCount = 0L;
 
     public static Board create(Member member, String title, String content) {
         Board board = new Board();
@@ -41,5 +42,9 @@ public class Board {
         board.viewCount = 0L;
         board.createdDate = LocalDateTime.now();
         return board;
+    }
+
+    public void incrementViewCount(){
+        this.viewCount++;
     }
 }

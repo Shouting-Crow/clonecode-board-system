@@ -1,6 +1,7 @@
 package com.clonecode.boardweb.controller;
 
 import com.clonecode.boardweb.domain.Member;
+import com.clonecode.boardweb.dto.board.BoardDetailDto;
 import com.clonecode.boardweb.dto.board.BoardListDto;
 import com.clonecode.boardweb.dto.board.BoardRegisterDto;
 import com.clonecode.boardweb.service.board.BoardService;
@@ -18,6 +19,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import java.util.List;
@@ -77,5 +79,12 @@ public class BoardController {
         boardService.registerBoard(dto);
 
         return "redirect:/boards";
+    }
+
+    @GetMapping("/board/{id}")
+    public String viewBoardDetail(@PathVariable(name = "id") Long id, Model model){
+        BoardDetailDto boardDetailDto = boardService.getBoardDetail(id);
+        model.addAttribute("boardDetail", boardDetailDto);
+        return "board/board-detail";
     }
 }
