@@ -26,17 +26,19 @@ public class Board {
 
     private String title;
 
+    private String content;
+
     @CreatedDate
     private LocalDateTime createdDate;
 
     private Long viewCount;
 
-    public static Board create(Member member, String title, List<Reply> replies, Long viewCount) {
+    public static Board create(Member member, String title, String content) {
         Board board = new Board();
         board.member = member;
         board.title = title;
-        board.reply = replies;
-        board.viewCount = viewCount;
+        board.content = content;
+        board.viewCount = 0L;
         board.createdDate = LocalDateTime.now();
         return board;
     }

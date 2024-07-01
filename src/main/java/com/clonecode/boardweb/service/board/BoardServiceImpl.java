@@ -1,12 +1,16 @@
 package com.clonecode.boardweb.service.board;
 
 import com.clonecode.boardweb.domain.Board;
+import com.clonecode.boardweb.domain.Member;
 import com.clonecode.boardweb.dto.board.BoardListDto;
+import com.clonecode.boardweb.dto.board.BoardRegisterDto;
 import com.clonecode.boardweb.repository.BoardRepository;
+import com.clonecode.boardweb.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -15,6 +19,7 @@ import java.util.List;
 public class BoardServiceImpl implements BoardService{
 
     private final BoardRepository boardRepository;
+    private final MemberRepository memberRepository;
 
     @Override
     public List<BoardListDto> getAllBoards() {
@@ -30,6 +35,16 @@ public class BoardServiceImpl implements BoardService{
     public Page<BoardListDto> getAllBoardsByPaging(Pageable pageable) {
         Page<Board> boards = boardRepository.findAll(pageable);
         return boards.map(this::convertToDto);
+    }
+
+    @Override
+    @Transactional
+    public Board registerBoard(BoardRegisterDto boardRegisterDto) {
+        Member member = memberRepository.findByLoginId(boardRegisterDto.getMember().getLoginId())
+                .orElseThrow(() -> new IllegalStateException("회원이 존재하지 않습니다."));
+
+        Board board = Board.create(member, boardRegisterDto.getTitle(), boardRegisterDto.getContent());
+        return boardRepository.save(board);
     }
 
     private BoardListDto convertToDto(Board board){
