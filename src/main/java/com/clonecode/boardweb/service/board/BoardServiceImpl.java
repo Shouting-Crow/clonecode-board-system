@@ -2,12 +2,15 @@ package com.clonecode.boardweb.service.board;
 
 import com.clonecode.boardweb.domain.Board;
 import com.clonecode.boardweb.domain.Member;
+import com.clonecode.boardweb.domain.Reply;
 import com.clonecode.boardweb.dto.board.BoardDetailDto;
 import com.clonecode.boardweb.dto.board.BoardListDto;
 import com.clonecode.boardweb.dto.board.BoardRegisterDto;
+import com.clonecode.boardweb.dto.board.BoardUpdateDeleteDto;
 import com.clonecode.boardweb.dto.reply.ReplyDto;
 import com.clonecode.boardweb.repository.BoardRepository;
 import com.clonecode.boardweb.repository.MemberRepository;
+import com.clonecode.boardweb.repository.ReplyRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -22,6 +25,7 @@ public class BoardServiceImpl implements BoardService{
 
     private final BoardRepository boardRepository;
     private final MemberRepository memberRepository;
+    private final ReplyRepository replyRepository;
 
     @Override
     public List<BoardListDto> getAllBoards() {
@@ -63,7 +67,7 @@ public class BoardServiceImpl implements BoardService{
                 .map(reply -> {
                     ReplyDto replyDto = new ReplyDto();
                     replyDto.setReplyId(reply.getId());
-                    replyDto.setMember(reply.getBoard().getMember());
+                    replyDto.setMember(reply.getMember());
                     replyDto.setContent(reply.getContent());
                     replyDto.setCreatedDate(reply.getCreatedDate());
                     return replyDto;
@@ -73,6 +77,37 @@ public class BoardServiceImpl implements BoardService{
         boardDetailDto.setReplies(replyDtos);
 
         return boardDetailDto;
+    }
+
+    @Override
+    @Transactional
+    public void updateBoard(BoardUpdateDeleteDto dto) {
+        Board board = boardRepository.findById(dto.getId())
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 게시글 입니다."));
+        board.setTitle(dto.getTitle());
+        board.setContent(dto.getContent());
+        boardRepository.save(board);
+    }
+
+    @Override
+    public void deleteBoard(Long boardId) {
+        List<Reply> replies = replyRepository.findByBoardId(boardId);
+        replyRepository.deleteAll(replies);
+
+        boardRepository.deleteById(boardId);
+    }
+
+    @Override
+    public BoardUpdateDeleteDto getBoardUpdateDto(Long boardId){
+        Board board  = boardRepository.findById(boardId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 게시글 입니다."));
+        BoardUpdateDeleteDto dto = new BoardUpdateDeleteDto();
+
+        dto.setId(board.getId());
+        dto.setTitle(dto.getTitle());
+        dto.setContent(dto.getContent());
+
+        return dto;
     }
 
     private BoardListDto convertToDto(Board board){

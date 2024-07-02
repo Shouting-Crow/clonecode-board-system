@@ -4,12 +4,14 @@ import com.clonecode.boardweb.domain.Member;
 import com.clonecode.boardweb.dto.board.BoardDetailDto;
 import com.clonecode.boardweb.dto.board.BoardListDto;
 import com.clonecode.boardweb.dto.board.BoardRegisterDto;
+import com.clonecode.boardweb.dto.board.BoardUpdateDeleteDto;
 import com.clonecode.boardweb.service.board.BoardService;
 import com.clonecode.boardweb.session.SessionConst;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -23,6 +25,7 @@ import java.util.List;
 
 @Controller
 @RequiredArgsConstructor
+@Slf4j
 public class BoardController {
 
     private final BoardService boardService;
@@ -80,11 +83,33 @@ public class BoardController {
 
     @GetMapping("/board/{id}")
     public String viewBoardDetail(@PathVariable(name = "id") Long id,
-                                  @SessionAttribute(name = "member", required = false) Member member,
+                                  @SessionAttribute(name = SessionConst.LOGIN_MEMBER, required = false) Member member,
                                   Model model){
         BoardDetailDto boardDetailDto = boardService.getBoardDetail(id);
         model.addAttribute("boardDetail", boardDetailDto);
         model.addAttribute("member", member);
+        log.info("member.id = {}", member.getId());
+        log.info("boardDetail.member.id = {}", boardDetailDto.getMember().getId());
         return "board/board-detail";
+    }
+
+    @GetMapping("/board/edit/{id}")
+    public String viewBoardEdit(@PathVariable(name = "id") Long id,
+                                Model model){
+        BoardDetailDto boardDetail = boardService.getBoardDetail(id);
+        model.addAttribute("boardDetail", boardDetail);
+        return "board/board-edit";
+    }
+
+    @PostMapping("/board/update")
+    public String updateBoard(@ModelAttribute(name = "dto") BoardUpdateDeleteDto dto){
+        boardService.updateBoard(dto);
+        return "redirect:/board/" + dto.getId();
+    }
+
+    @PostMapping("/board/delete")
+    public String deleteBoard(@RequestParam(name = "id") Long id){
+        boardService.deleteBoard(id);
+        return "redirect:/boards";
     }
 }
