@@ -80,8 +80,15 @@
       <span th:text="${reply.member.name}"></span>
       <span class="reply-content" th:text="${reply.content}"></span>
       <span class="reply-date" th:text="${#temporals.format(reply.createdDate, 'MM.dd HH:mm')}"></span>
-      <span class="reply-delete" th:if="${member != null and member.id == reply.member.id}" th:text="'삭제'"
-            onclick="deleteReply([[${reply.id}]])"></span>
+      <span class="reply-edit" th:if="${member != null and member.id == reply.member.id}">
+        <a th:href="@{/replies/edit-form(replyId=${reply.replyId})}">수정</a>
+      </span>
+      <span class="reply-delete" th:if="${member != null and member.id == reply.member.id}">
+        <form th:action="@{/replies/delete(replyId=${reply.replyId})}" method="post" style="display: inline;">
+          <input type="hidden" name="_method" value="delete" />
+          <button type="submit" class="btn btn-link">삭제</button>
+        </form>
+      </span>
     </li>
   </ul>
 
@@ -109,22 +116,6 @@
 </div>
 
 <script>
-  function deleteReply(replyId){
-    if (confirm('댓글을 삭제하시겠습니까>')){
-      fetch(`/replies/${replyId}`,{
-        method: 'DELETE',
-        headers: {
-          'X-CSRF-TOKEN': document.querySelector('meta[name="_csrf"]').getAttribute('content')
-        }
-      }).then(response => {
-        if (response.ok){
-          window.location.reload();
-        } else {
-          alert('댓글 삭제에 실패했습니다.');
-        }
-      });
-    }
-  }
 </script>
 
 </body>

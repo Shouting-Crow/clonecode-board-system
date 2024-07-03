@@ -4,7 +4,7 @@ import com.clonecode.boardweb.domain.Member;
 import com.clonecode.boardweb.dto.board.BoardDetailDto;
 import com.clonecode.boardweb.dto.board.BoardListDto;
 import com.clonecode.boardweb.dto.board.BoardRegisterDto;
-import com.clonecode.boardweb.dto.board.BoardUpdateDeleteDto;
+import com.clonecode.boardweb.dto.board.BoardUpdateDto;
 import com.clonecode.boardweb.service.board.BoardService;
 import com.clonecode.boardweb.session.SessionConst;
 import jakarta.servlet.http.HttpServletRequest;
@@ -88,8 +88,6 @@ public class BoardController {
         BoardDetailDto boardDetailDto = boardService.getBoardDetail(id);
         model.addAttribute("boardDetail", boardDetailDto);
         model.addAttribute("member", member);
-        log.info("member.id = {}", member.getId());
-        log.info("boardDetail.member.id = {}", boardDetailDto.getMember().getId());
         return "board/board-detail";
     }
 
@@ -102,7 +100,7 @@ public class BoardController {
     }
 
     @PostMapping("/board/update")
-    public String updateBoard(@ModelAttribute(name = "dto") BoardUpdateDeleteDto dto){
+    public String updateBoard(@ModelAttribute(name = "dto") BoardUpdateDto dto){
         boardService.updateBoard(dto);
         return "redirect:/board/" + dto.getId();
     }
