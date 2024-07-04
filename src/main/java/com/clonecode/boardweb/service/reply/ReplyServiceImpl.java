@@ -42,13 +42,15 @@ public class ReplyServiceImpl implements ReplyService{
 
     @Override
     @Transactional
-    public void updateReply(ReplyUpdateDto dto) {
+    public Long updateReply(ReplyUpdateDto dto) {
         Reply reply = replyRepository.findById(dto.getId())
                 .orElseThrow(() -> new IllegalArgumentException("댓글을 찾을 수 없습니다."));
 
         reply.setContent(dto.getContent());
         reply.setCreatedDate(dto.getUpdatedDate());
         replyRepository.save(reply);
+
+        return reply.getBoard().getId();
     }
 
     @Override

@@ -76,19 +76,19 @@
   </div>
 
   <ul class="reply-list">
-    <li class="reply-item" th:each="reply : ${boardDetail.replies}">
-      <span th:text="${reply.member.name}"></span>
+    <li class="reply-item" th:each="reply : ${boardDetail.replies}" th:attr="data-reply-id=${reply.replyId}">
+      <span class="reply-member" th:text="${reply.member.name}"></span>
       <span class="reply-content" th:text="${reply.content}"></span>
       <span class="reply-date" th:text="${#temporals.format(reply.createdDate, 'MM.dd HH:mm')}"></span>
       <span class="reply-edit" th:if="${member != null and member.id == reply.member.id}">
-        <a th:href="@{/replies/edit-form(replyId=${reply.replyId})}">수정</a>
-      </span>
+            <a href="#" th:onclick="|showEditForm(${reply.replyId})|">수정</a>
+        </span>
       <span class="reply-delete" th:if="${member != null and member.id == reply.member.id}">
-        <form th:action="@{/replies/delete(replyId=${reply.replyId})}" method="post" style="display: inline;">
-          <input type="hidden" name="_method" value="delete" />
-          <button type="submit" class="btn btn-link">삭제</button>
-        </form>
-      </span>
+            <form th:action="@{/replies/delete(replyId=${reply.replyId})}" method="post" style="display: inline;">
+                <input type="hidden" name="_method" value="delete" />
+                <button type="submit" class="btn btn-link">삭제</button>
+            </form>
+        </span>
     </li>
   </ul>
 
@@ -116,6 +116,51 @@
 </div>
 
 <script>
+  function showEditForm(replyId) {
+    console.log("showEditForm called for replyId:", replyId);
+    const replyItem = document.querySelector(`.reply-item[data-reply-id="${replyId}"]`);
+    if (!replyItem) {
+      console.error("Cannot find replyItem for replyId:", replyId);
+      return;
+    }
+
+    const replyContent = replyItem.querySelector('.reply-content').innerText;
+    replyItem.innerHTML = `
+        <form action="/replies/edit" method="post">
+            <input type="hidden" name="id" value="${replyId}" />
+            <div class="mb-3">
+                <textarea class="form-control" name="content" rows="3">${replyContent}</textarea>
+            </div>
+            <button type="submit" class="btn btn-primary">수정 완료</button>
+            <button type="button" class="btn btn-secondary" onclick="cancelEdit(${replyId}, '${replyContent}')">취소</button>
+        </form>
+    `;
+  }
+
+  function cancelEdit(replyId, originalContent) {
+    const replyItem = document.querySelector(`.reply-item[data-reply-id="${replyId}"]`);
+    if (!replyItem) {
+      console.error("Cannot find replyItem for replyId:", replyId);
+      return;
+    }
+
+    const replyMember = replyItem.querySelector('.reply-member').innerText;
+    const replyDate = replyItem.querySelector('.reply-date').innerText;
+    replyItem.innerHTML = `
+        <span class="reply-member">${replyMember}</span>
+        <span class="reply-content">${originalContent}</span>
+        <span class="reply-date">${replyDate}</span>
+        <span class="reply-edit">
+            <a href="#" onclick="showEditForm(${replyId})">수정</a>
+        </span>
+        <span class="reply-delete">
+            <form action="/replies/delete" method="post" style="display: inline;">
+                <input type="hidden" name="_method" value="delete" />
+                <button type="submit" class="btn btn-link">삭제</button>
+            </form>
+        </span>
+    `;
+  }
 </script>
 
 </body>

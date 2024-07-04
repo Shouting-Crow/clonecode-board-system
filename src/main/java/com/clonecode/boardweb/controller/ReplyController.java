@@ -43,19 +43,10 @@ public class ReplyController {
         return "redirect:/board/" + boardId;
     }
 
-    @GetMapping("/edit-form")
-    public String viewEditForm(@RequestParam(name = "replyId") Long replyId,
-                               Model model){
-        Reply reply = replyRepository.findById(replyId).
-                orElseThrow(() -> new IllegalArgumentException("존재하지 않는 댓글 입니다."));
-        model.addAttribute("reply", reply);
-        return "reply/reply-edit";
-    }
-
     @PostMapping("/edit")
     public String editReply(@ModelAttribute(name = "dto") ReplyUpdateDto dto){
-        replyService.updateReply(dto);
-        return "redirect:/board/" + dto.getBoardId();
+        Long boardId = replyService.updateReply(dto);
+        return "redirect:/board/" + boardId;
     }
 
 }

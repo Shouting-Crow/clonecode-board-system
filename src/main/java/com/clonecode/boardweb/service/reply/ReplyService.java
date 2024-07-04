@@ -6,6 +6,6 @@ import com.clonecode.boardweb.dto.reply.ReplyUpdateDto;
 
 public interface ReplyService {
     Reply registerReply(ReplyRegisterDto dto);
-    void updateReply(ReplyUpdateDto dto);
+    Long updateReply(ReplyUpdateDto dto);
     Long deleteReply(Long id);
 }
