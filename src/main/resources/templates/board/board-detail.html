@@ -78,8 +78,8 @@
   <ul class="reply-list">
     <li class="reply-item" th:each="reply : ${boardDetail.replies}" th:attr="data-reply-id=${reply.replyId}">
       <span class="reply-member" th:text="${reply.member.name}"></span>
-      <span class="reply-content" th:text="${reply.content}"></span>
-      <span class="reply-date" th:text="${#temporals.format(reply.createdDate, 'MM.dd HH:mm')}"></span>
+      <span class="reply-content" th:text="${reply.content}">style="flex: 1; margin-left: 10px;"></span>
+      <span class="reply-date" th:text="${#temporals.format(reply.createdDate, 'MM.dd HH:mm')}" style="white-space: nowrap;"></span>
       <span class="reply-edit" th:if="${member != null and member.id == reply.member.id}">
             <a href="#" th:onclick="|showEditForm(${reply.replyId})|">수정</a>
         </span>
@@ -116,40 +116,41 @@
 </div>
 
 <script>
-  function showEditForm(replyId) {
-    console.log("showEditForm called for replyId:", replyId);
-    const replyItem = document.querySelector(`.reply-item[data-reply-id="${replyId}"]`);
-    if (!replyItem) {
-      console.error("Cannot find replyItem for replyId:", replyId);
-      return;
-    }
+    function showEditForm(replyId) {
+        console.log("showEditForm called for replyId:", replyId);
+        const replyItem = document.querySelector(`.reply-item[data-reply-id="${replyId}"]`);
+        if (!replyItem) {
+            console.error("Cannot find replyItem for replyId:", replyId);
+            return;
+        }
 
-    const replyContent = replyItem.querySelector('.reply-content').innerText;
-    replyItem.innerHTML = `
-        <form action="/replies/edit" method="post">
-            <input type="hidden" name="id" value="${replyId}" />
-            <div class="mb-3">
-                <textarea class="form-control" name="content" rows="3">${replyContent}</textarea>
-            </div>
-            <button type="submit" class="btn btn-primary">수정 완료</button>
-            <button type="button" class="btn btn-secondary" onclick="cancelEdit(${replyId}, '${replyContent}')">취소</button>
-        </form>
-    `;
-  }
+        const replyContent = replyItem.querySelector('.reply-content').innerText;
+        const replyMember = replyItem.querySelector('.reply-member').innerText;
+        const replyDate = replyItem.querySelector('.reply-date').innerText;
 
-  function cancelEdit(replyId, originalContent) {
-    const replyItem = document.querySelector(`.reply-item[data-reply-id="${replyId}"]`);
-    if (!replyItem) {
-      console.error("Cannot find replyItem for replyId:", replyId);
-      return;
-    }
-
-    const replyMember = replyItem.querySelector('.reply-member').innerText;
-    const replyDate = replyItem.querySelector('.reply-date').innerText;
-    replyItem.innerHTML = `
+        replyItem.innerHTML = `
         <span class="reply-member">${replyMember}</span>
-        <span class="reply-content">${originalContent}</span>
-        <span class="reply-date">${replyDate}</span>
+        <form action="/replies/edit" method="post" class="d-flex align-items-center" style="flex: 1; margin-left: 10px;">
+            <input type="hidden" name="id" value="${replyId}" />
+            <textarea class="form-control" name="content" rows="1" style="flex: 1;">${replyContent}</textarea>
+            <button type="submit" class="btn btn-primary ms-2">수정 완료</button>
+            <button type="button" class="btn btn-secondary ms-2" onclick="cancelEdit(${replyId}, '${replyContent}', '${replyMember}', '${replyDate}')">취소</button>
+        </form>
+        <span class="reply-date" style="white-space: nowrap;">${replyDate}</span>
+    `;
+    }
+
+    function cancelEdit(replyId, originalContent, replyMember, replyDate) {
+        const replyItem = document.querySelector(`.reply-item[data-reply-id="${replyId}"]`);
+        if (!replyItem) {
+            console.error("Cannot find replyItem for replyId:", replyId);
+            return;
+        }
+
+        replyItem.innerHTML = `
+        <span class="reply-member">${replyMember}</span>
+        <span class="reply-content" style="flex: 1; margin-left: 10px;">${originalContent}</span>
+        <span class="reply-date" style="white-space: nowrap;">${replyDate}</span>
         <span class="reply-edit">
             <a href="#" onclick="showEditForm(${replyId})">수정</a>
         </span>
@@ -160,7 +161,7 @@
             </form>
         </span>
     `;
-  }
+    }
 </script>
 
 </body>
