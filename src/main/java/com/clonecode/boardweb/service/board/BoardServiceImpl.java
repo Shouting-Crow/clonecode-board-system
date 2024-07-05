@@ -25,22 +25,6 @@ public class BoardServiceImpl implements BoardService{
     private final ReplyRepository replyRepository;
 
     @Override
-    public List<BoardListDto> getAllBoards() {
-
-        List<Board> boards = boardRepository.findAll();
-
-        return boards.stream()
-                .map(this::convertToDto)
-                .toList();
-    }
-
-    @Override
-    public Page<BoardListDto> getAllBoardsByPaging(Pageable pageable) {
-        Page<Board> boards = boardRepository.findAll(pageable);
-        return boards.map(this::convertToDto);
-    }
-
-    @Override
     public Page<BoardListDto> searchBoards(BoardSearchDto dto, Pageable pageable) {
         return boardRepository.search(dto, pageable)
                 .map(this::convertToDto);

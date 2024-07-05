@@ -8,8 +8,6 @@ import org.springframework.data.domain.Pageable;
 import java.util.List;
 
 public interface BoardService {
-    List<BoardListDto> getAllBoards();
-    Page<BoardListDto> getAllBoardsByPaging(Pageable pageable);
     Board registerBoard(BoardRegisterDto boardRegisterDto);
     BoardDetailDto getBoardDetail(Long boardId);
     void updateBoard(BoardUpdateDto dto);
