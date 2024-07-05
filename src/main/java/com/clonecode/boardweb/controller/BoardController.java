@@ -1,10 +1,7 @@
 package com.clonecode.boardweb.controller;
 
 import com.clonecode.boardweb.domain.Member;
-import com.clonecode.boardweb.dto.board.BoardDetailDto;
-import com.clonecode.boardweb.dto.board.BoardListDto;
-import com.clonecode.boardweb.dto.board.BoardRegisterDto;
-import com.clonecode.boardweb.dto.board.BoardUpdateDto;
+import com.clonecode.boardweb.dto.board.*;
 import com.clonecode.boardweb.service.board.BoardService;
 import com.clonecode.boardweb.session.SessionConst;
 import jakarta.servlet.http.HttpServletRequest;
@@ -31,17 +28,18 @@ public class BoardController {
     private final BoardService boardService;
 
     @GetMapping("/boards")
-    public String viewBoardList(Model model, Pageable pageable){
+    public String viewBoardList(Model model, BoardSearchDto dto, Pageable pageable){
         PageRequest pageRequest = PageRequest.of(
                 pageable.getPageNumber(),
                 10,
                 Sort.by("id").descending()
         );
 
-        Page<BoardListDto> boardList = boardService.getAllBoardsByPaging(pageRequest);
+        Page<BoardListDto> boardList = boardService.searchBoards(dto, pageRequest);
         List<BoardListDto> content = boardList.getContent();
         model.addAttribute("boardList", boardList);
         model.addAttribute("boards", content);
+        model.addAttribute("dto", dto);
 
         return "board/board-list";
     }

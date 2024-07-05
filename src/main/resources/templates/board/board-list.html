@@ -8,8 +8,27 @@
 <body>
 <div class="container mt-5">
   <h1>게시글 리스트</h1>
+
+  <form th:action="@{/boards}" method="get" class="mb-3">
+    <div class="row">
+      <div class="col-md-3">
+        <input type="text" name="title" class="form-control" placeholder="제목" th:value="${dto.title}">
+      </div>
+      <div class="col-md-3">
+        <input type="text" name="content" class="form-control" placeholder="내용" th:value="${dto.content}">
+      </div>
+      <div class="col-md-3">
+        <input type="text" name="memberName" class="form-control" placeholder="작성자" th:value="${dto.memberName}">
+      </div>
+      <div class="col-md-3">
+        <button type="submit" class="btn btn-primary">검색</button>
+      </div>
+    </div>
+  </form>
+
   <div class="d-flex justify-content-end mb-3">
     <a href="#" th:href="@{/board/register}" class="btn btn-primary">글쓰기</a>
+    <a href="#" th:href="@{/}" class="btn btn-secondary">돌아가기</a>
   </div>
   <table class="table">
     <thead>

@@ -37,6 +37,9 @@ public class ReplyServiceImpl implements ReplyService{
         reply.setMember(member);
         reply.setCreatedDate(LocalDateTime.now());
 
+        Long replyCount = board.getReplyCount();
+        board.setReplyCount(replyCount + 1);
+
         return replyRepository.save(reply);
     }
 

@@ -3,10 +3,7 @@ package com.clonecode.boardweb.service.board;
 import com.clonecode.boardweb.domain.Board;
 import com.clonecode.boardweb.domain.Member;
 import com.clonecode.boardweb.domain.Reply;
-import com.clonecode.boardweb.dto.board.BoardDetailDto;
-import com.clonecode.boardweb.dto.board.BoardListDto;
-import com.clonecode.boardweb.dto.board.BoardRegisterDto;
-import com.clonecode.boardweb.dto.board.BoardUpdateDto;
+import com.clonecode.boardweb.dto.board.*;
 import com.clonecode.boardweb.dto.reply.ReplyDto;
 import com.clonecode.boardweb.repository.BoardRepository;
 import com.clonecode.boardweb.repository.MemberRepository;
@@ -41,6 +38,12 @@ public class BoardServiceImpl implements BoardService{
     public Page<BoardListDto> getAllBoardsByPaging(Pageable pageable) {
         Page<Board> boards = boardRepository.findAll(pageable);
         return boards.map(this::convertToDto);
+    }
+
+    @Override
+    public Page<BoardListDto> searchBoards(BoardSearchDto dto, Pageable pageable) {
+        return boardRepository.search(dto, pageable)
+                .map(this::convertToDto);
     }
 
     @Override

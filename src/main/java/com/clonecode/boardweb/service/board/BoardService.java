@@ -1,10 +1,7 @@
 package com.clonecode.boardweb.service.board;
 
 import com.clonecode.boardweb.domain.Board;
-import com.clonecode.boardweb.dto.board.BoardDetailDto;
-import com.clonecode.boardweb.dto.board.BoardListDto;
-import com.clonecode.boardweb.dto.board.BoardRegisterDto;
-import com.clonecode.boardweb.dto.board.BoardUpdateDto;
+import com.clonecode.boardweb.dto.board.*;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -17,4 +14,5 @@ public interface BoardService {
     BoardDetailDto getBoardDetail(Long boardId);
     void updateBoard(BoardUpdateDto dto);
     void deleteBoard(Long boardId);
+    Page<BoardListDto> searchBoards(BoardSearchDto dto, Pageable pageable);
 }

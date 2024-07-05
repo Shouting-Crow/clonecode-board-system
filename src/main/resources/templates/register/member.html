@@ -46,6 +46,7 @@
             <div th:if="${#fields.hasErrors('streetAddress')}" class="text-danger" th:errors="*{streetAddress}">도로명 주소를 입력해 주세요.</div>
         </div>
         <button type="submit" class="btn btn-primary">회원가입</button>
+        <a href="#" th:href="@{/}" class="btn btn-secondary">돌아가기</a>
     </form>
 </div>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.7/dist/umd/popper.min.js" integrity="sha384-oBqDVmMz4fnFO9gybBogGzD6V5snhKQzN+GYehgx0sOg5HRR6G7klJz5K/eIFHp5" crossorigin="anonymous"></script>

@@ -40,6 +40,7 @@ public class Board {
         board.title = title;
         board.content = content;
         board.viewCount = 0L;
+        board.replyCount = 0L;
         board.createdDate = LocalDateTime.now();
         return board;
     }
